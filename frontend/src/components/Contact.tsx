@@ -19,9 +19,9 @@ export const Contact = () => {
         )
     }
   return (
-    <div className="w-[80%] ml-[20rem] h-screen bg-gradient-to-r from-[#133E87] to-[#CBDCEB]">
+    <div className="w-[80%] ml-[20rem] h-screen ">
         <div className="flex my-5 justify-around">
-        <div className="font-semibold text-5xl text-center font-sans my-5 text-[#F3F3E0]">Contacts</div>
+        <div className="font-semibold text-5xl text-center font-sans my-5 text-[#133E87]">Contacts</div>
         </div>
         <div className="grid grid-cols-3 w-[90%] mx-auto my-5">
             {

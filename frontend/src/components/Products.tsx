@@ -43,9 +43,9 @@ export const Products = () => {
   }
 
   return (
-    <div className="w-[80%] ml-[20rem] bg-gradient-to-r from-[#133E87] to-[#CBDCEB] h-screen">
+    <div className="w-[80%] ml-[20rem]  h-screen">
       <div className="flex my-5 justify-around">
-        <div className="font-semibold text-5xl text-center font-sans my-5 text-[#F3F3E0]">Products</div>
+        <div className="font-semibold text-5xl text-center font-sans my-5 text-[#133E87]">Products</div>
         <div className="my-auto">
           <Button size="lg" color="white" className="bg-[#133E87] text-white p-2 h-min" onClick={() => setOpenModal(true)}>
             Add Product

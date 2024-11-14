@@ -25,10 +25,10 @@ export function About() {
     },[openModal])
     
   return (
-    <div className="bg-gradient-to-r from-[#133E87] to-[#608BC1] h-screen ml-[20rem] w-full text-center">
+    <div className=" h-screen ml-[20rem] w-full text-center">
         <AboutModalComponent openModal={openModal} setOpenModal={setOpenModal}/>
         <div className="flex my-5 justify-around">
-            <div className="font-semibold text-5xl text-center font-sans my-5 text-[#F3F3E0]">About</div>
+            <div className="font-semibold text-5xl text-center font-sans my-5 text-[#133E87]">About</div>
             <img src={about.logo} alt="" className="h-20 rounded-[100%] border-2 border-black"/>
         </div>
         <div className=" h-auto my-[5rem] w-[70%] mx-auto">

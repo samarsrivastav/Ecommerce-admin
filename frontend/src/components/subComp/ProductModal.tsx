@@ -6,12 +6,26 @@ export function ModalComponent({ openModal, setOpenModal ,onAdd}: { openModal: a
   const [title,setTitle]=useState("")
   const [description,setDescription]=useState("")
   const [onButtonLoading,setOnButtonLoading]=useState("")
-  const [file, setFile] = useState<File | null>(null);
+  const [file, setFile] = useState<File | undefined>(undefined);
+  const [file2, setFile2] = useState<File | undefined>(undefined);
+  const [file3, setFile3] = useState<File | undefined>(undefined);
   const [err,seterr]=useState("")
   const handleFileChange=(event:any)=>{
     const selectedFile=event.target.files?.[0]
     if(selectedFile){
       setFile(selectedFile)
+    }
+  }
+  const handleFileChange2=(event:any)=>{
+    const selectedFile=event.target.files?.[0]
+    if(selectedFile){
+      setFile2(selectedFile)
+    }
+  }
+  const handleFileChange3=(event:any)=>{
+    const selectedFile=event.target.files?.[0]
+    if(selectedFile){
+      setFile3(selectedFile)
     }
   }
   return (
@@ -39,12 +53,20 @@ export function ModalComponent({ openModal, setOpenModal ,onAdd}: { openModal: a
             <Label htmlFor="image" value="Product Image" />
             <FileInput id="image" accept="image/*" required onChange={handleFileChange}/>
           </div>
+          <div>
+            <Label htmlFor="image2" value="Product Image" />
+            <FileInput id="image2" accept="image/*" onChange={handleFileChange2}/>
+          </div>
+          <div>
+            <Label htmlFor="image3" value="Product Image" />
+            <FileInput id="image3" accept="image/*" onChange={handleFileChange3}/>
+          </div>
             <div className="error text-red">{err}</div>
           <div className="w-full flex justify-between">
             <Button className="bg-[#133E87] text-white " type="button" onClick={async()=>{
               setOnButtonLoading("Loading....")
               if(file){
-                const res=await addProduct(title,description,file)
+                const res=await addProduct(title,description,file,file2,file3)
                 if(res.data.status===200){
                   setOpenModal(false)
                   onAdd()

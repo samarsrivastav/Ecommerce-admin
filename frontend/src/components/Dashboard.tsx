@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 export const Dashboard = () => {
     return (
         <div className="w-[80%] ml-[20rem]">
-            <div className="flex flex-col items-center justify-center min-h-screen  w-screen bg-gradient-to-r from-[#133E87] to-[#CBDCEB] text-white p-8 text-center">
+            <div className="flex flex-col items-center justify-center min-h-screen text-['#133E87'] p-8 text-center">
                 <div className="max-w-2xl">
                     <Typography variant="h2" className="text-4xl md:text-5xl font-bold mb-6">
                         Welcome to Your Admin Dashboard

@@ -10,10 +10,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const client_1 = require("@prisma/client");
-const cloudinary_1 = require("cloudinary");
 const stream_1 = require("stream");
+const cloudinary = require("cloudinary").v2;
 const prisma = new client_1.PrismaClient();
-cloudinary_1.v2.config({
+cloudinary.config({
     cloud_name: process.env.CLOUD_NAME,
     api_key: process.env.CLOUD_API_KEY,
     api_secret: process.env.CLOUD_API_SECRET,
@@ -24,46 +24,65 @@ const bufferToStream = (buffer) => {
     stream.push(null);
     return stream;
 };
+// Define the mapping between field names in the request and database columns
+const imageFieldMapping = {
+    image1: "imageUrl",
+    image2: "imageUrl2",
+    image3: "imageUrl3",
+};
 const updateProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
     try {
         const dataBody = {};
-        if ((_a = req.file) === null || _a === void 0 ? void 0 : _a.buffer) {
-            yield new Promise((resolve, reject) => {
-                const uploadStream = cloudinary_1.v2.uploader.upload_stream({ folder: "abbas/product" }, (error, result) => {
-                    if (error) {
-                        console.error("Cloudinary upload error:", error);
-                        return reject(new Error("Cloudinary upload failed"));
-                    }
-                    dataBody.imageUrl = (result === null || result === void 0 ? void 0 : result.secure_url) || "";
-                    resolve();
-                });
-                //@ts-ignore
-                bufferToStream(req.file.buffer).pipe(uploadStream);
-            });
+        if (req.files && typeof req.files === "object") {
+            const uploadPromises = [];
+            // Loop through each specified file and upload to the mapped field
+            for (const [key, files] of Object.entries(req.files)) {
+                if (imageFieldMapping[key] && Array.isArray(files) && files[0]) {
+                    const fieldName = imageFieldMapping[key];
+                    const file = files[0];
+                    const uploadPromise = new Promise((resolve, reject) => {
+                        const uploadStream = cloudinary.uploader.upload_stream({ folder: "abbas/product" }, (error, result) => {
+                            if (error) {
+                                console.error("Cloudinary upload error:", error);
+                                reject(new Error("Cloudinary upload failed"));
+                            }
+                            else {
+                                dataBody[fieldName] = result.secure_url;
+                                resolve();
+                            }
+                        });
+                        bufferToStream(file.buffer).pipe(uploadStream);
+                    });
+                    uploadPromises.push(uploadPromise);
+                }
+            }
+            // Wait for all uploads to complete
+            yield Promise.all(uploadPromises);
         }
+        // Update other optional fields
         if (req.body.title) {
             dataBody.title = req.body.title;
         }
         if (req.body.description) {
             dataBody.description = req.body.description;
         }
+        // Update the product in the database with the populated dataBody
         const result = yield prisma.products.update({
-            where: {
-                id: Number(req.params.id),
-            },
+            where: { id: Number(req.params.id) },
             data: dataBody,
         });
         res.json({
             status: 200,
+            message: "Product updated successfully",
             data: result,
         });
     }
     catch (error) {
         console.error("Error updating product:", error);
-        res.status(403).json({
-            status: 403,
+        res.status(500).json({
+            status: 500,
             message: "Error while updating product",
+            error: error.message,
         });
     }
 });

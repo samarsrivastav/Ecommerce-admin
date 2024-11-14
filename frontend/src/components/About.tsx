@@ -20,6 +20,15 @@ export function About() {
             if(response.status==200){
                 setAbout(response.data.result)
             }
+            if(!response.data.result){
+                setAbout({
+                    companyName:"N/A",
+                    logo:"",
+                    phone:"N/A",
+                    email:"N/A",
+                    companyAdress:"N/A"
+                })
+            }
         }
         fetchData()
     },[openModal])
@@ -29,7 +38,11 @@ export function About() {
         <AboutModalComponent openModal={openModal} setOpenModal={setOpenModal}/>
         <div className="flex my-5 justify-around">
             <div className="font-semibold text-5xl text-center font-sans my-5 text-[#133E87]">About</div>
-            <img src={about.logo} alt="" className="h-20 rounded-[100%] border-2 border-black"/>
+            <img 
+                src={about.logo} 
+                alt="" 
+                className={`h-20 rounded-[100%] ${about.logo ? 'border-2 border-black' : ''}`} 
+            />
         </div>
         <div className=" h-auto my-[5rem] w-[70%] mx-auto">
             <AboutTables about={about}/>

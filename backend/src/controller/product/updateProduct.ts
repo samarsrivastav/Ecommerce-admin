@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
-import { v2 as cloudinary } from "cloudinary";
 import { Readable } from "stream";
+const cloudinary = require("cloudinary").v2;
 
 const prisma = new PrismaClient();
 
@@ -12,7 +12,7 @@ cloudinary.config({
 });
 
 interface FileRequest extends Request {
-  file?: Express.Multer.File;
+  files?: Express.Multer.File[] | { [fieldname: string]: Express.Multer.File[] };
 }
 
 const bufferToStream = (buffer: Buffer): Readable => {
@@ -22,28 +22,51 @@ const bufferToStream = (buffer: Buffer): Readable => {
   return stream;
 };
 
+// Define the mapping between field names in the request and database columns
+const imageFieldMapping: { [key: string]: "imageUrl" | "imageUrl2" | "imageUrl3" } = {
+  image1: "imageUrl",
+  image2: "imageUrl2",
+  image3: "imageUrl3",
+};
+
 const updateProduct = async (req: FileRequest, res: Response): Promise<void> => {
   try {
-    const dataBody: { title?: string; description?: string; imageUrl?: string } = {};
+    const dataBody: { title?: string; description?: string; imageUrl?: string; imageUrl2?: string; imageUrl3?: string } = {};
 
-    if (req.file?.buffer) {
-      await new Promise<void>((resolve, reject) => {
-        const uploadStream = cloudinary.uploader.upload_stream(
-          { folder: "abbas/product" },
-          (error, result) => {
-            if (error) {
-              console.error("Cloudinary upload error:", error);
-              return reject(new Error("Cloudinary upload failed"));
-            }
-            dataBody.imageUrl = result?.secure_url || "";
-            resolve();
-          }
-        );
-        //@ts-ignore
-        bufferToStream(req.file.buffer).pipe(uploadStream);
-      });
+    if (req.files && typeof req.files === "object") {
+      const uploadPromises: Promise<void>[] = [];
+
+      // Loop through each specified file and upload to the mapped field
+      for (const [key, files] of Object.entries(req.files)) {
+        if (imageFieldMapping[key] && Array.isArray(files) && files[0]) {
+          const fieldName = imageFieldMapping[key];
+          const file = files[0];
+
+          const uploadPromise = new Promise<void>((resolve, reject) => {
+            const uploadStream = cloudinary.uploader.upload_stream(
+              { folder: "abbas/product" },
+              (error: any, result: { secure_url: string }) => {
+                if (error) {
+                  console.error("Cloudinary upload error:", error);
+                  reject(new Error("Cloudinary upload failed"));
+                } else {
+                  dataBody[fieldName] = result.secure_url;
+                  resolve();
+                }
+              }
+            );
+            bufferToStream(file.buffer).pipe(uploadStream);
+          });
+
+          uploadPromises.push(uploadPromise);
+        }
+      }
+
+      // Wait for all uploads to complete
+      await Promise.all(uploadPromises);
     }
 
+    // Update other optional fields
     if (req.body.title) {
       dataBody.title = req.body.title;
     }
@@ -51,22 +74,23 @@ const updateProduct = async (req: FileRequest, res: Response): Promise<void> => 
       dataBody.description = req.body.description;
     }
 
+    // Update the product in the database with the populated dataBody
     const result = await prisma.products.update({
-      where: {
-        id: Number(req.params.id),
-      },
+      where: { id: Number(req.params.id) },
       data: dataBody,
     });
 
     res.json({
       status: 200,
+      message: "Product updated successfully",
       data: result,
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error updating product:", error);
-    res.status(403).json({
-      status: 403,
+    res.status(500).json({
+      status: 500,
       message: "Error while updating product",
+      error: error.message,
     });
   }
 };

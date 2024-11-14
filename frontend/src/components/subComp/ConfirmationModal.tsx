@@ -1,5 +1,6 @@
 import React from 'react';
-
+import { Button, Modal } from "flowbite-react";
+import { HiOutlineExclamationCircle } from "react-icons/hi";
 interface ConfirmationModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -8,17 +9,26 @@ interface ConfirmationModalProps {
 
 export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ isOpen, onClose, onConfirm }) => {
   if (!isOpen) return null;
-
+  
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-70">
-      <div className="bg-white p-5 rounded shadow-lg">
-        <h3 className="text-lg font-semibold">Confirm Deletion</h3>
-        <p>Are you sure you want to delete this product?</p>
-        <div className="flex justify-end mt-4">
-          <button className="mr-2 px-4 py-2 bg-gray-200 rounded" onClick={onClose}>Cancel</button>
-          <button className="px-4 py-2 bg-red-600 text-white rounded" onClick={onConfirm}>Delete</button>
+    <Modal show={isOpen} size="md" onClose={onClose} popup>
+    <Modal.Header />
+    <Modal.Body>
+      <div className="text-center">
+        <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
+        <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+          Are you sure you want to delete this product?
+        </h3>
+        <div className="flex justify-center gap-4">
+          <Button color="failure" onClick={onConfirm}>
+            {"Yes, I'm sure"}
+          </Button>
+          <Button color="gray" onClick={onClose}>
+            No, cancel
+          </Button>
         </div>
       </div>
-    </div>
-  );
+    </Modal.Body>
+  </Modal>
+);
 };

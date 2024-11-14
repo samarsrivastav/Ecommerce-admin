@@ -8,7 +8,7 @@ interface itemProp{
 export function ContactCard({item}:{item:itemProp}) {
     const mailingId=`mailto:${item.mail}`
   return (
-    <Card className=" max-w-sm h-[15rem] my-5 mx-3 bg-[#F3F3E0] " >
+    <Card className=" max-w-sm h-[15rem] my-5 mx-3 bg-[#608BC1] " >
       <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
         {item.name}
       </h5>

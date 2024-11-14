@@ -10,6 +10,8 @@ interface item {
   title: string;
   description: string;
   imageUrl: string;
+  imageUrl2: string;
+  imageUrl3: string;
 }
 
 export const Products = () => {
@@ -43,7 +45,7 @@ export const Products = () => {
   }
 
   return (
-    <div className="w-[80%] ml-[20rem]  h-screen">
+    <div className="w-[80%] ml-[20rem] h-screen">
       <div className="flex my-5 justify-around">
         <div className="font-semibold text-5xl text-center font-sans my-5 text-[#133E87]">Products</div>
         <div className="my-auto">

@@ -26,6 +26,11 @@ export function SidebarComponent() {
             if(response.status==200){
                 setAbout(response.data.result)
             }
+            if(!response.data.result){
+                setAbout({
+                    companyName:"N/A"
+                })
+            }
         }
         fetchData()
     },[])

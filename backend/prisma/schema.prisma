@@ -17,6 +17,8 @@ model Products{
   title String
   description String
   imageUrl String
+  imageUrl2 String?
+  imageUrl3 String?
 }
 model About{
   id Int @id @default(autoincrement())

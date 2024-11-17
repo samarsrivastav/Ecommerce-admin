@@ -1,17 +1,29 @@
 import { Button, FileInput, Label, Modal, TextInput } from "flowbite-react";
 import { useState } from "react";
 import { updateAbout } from "../../data/aboutApis";
-
+interface aboutProp{
+  id?:string,
+  phone?:string,
+  email?:string,
+  logo?:string,
+  companyName?:string,
+  companyAdress?:string,
+  companyTagline?:string,
+  companyDescription?:string
+}
 interface AboutModalComponentProps {
   openModal: boolean;
   setOpenModal: (isOpen: boolean) => void;
+  about:aboutProp
 }
 
-export function AboutModalComponent({ openModal, setOpenModal }: AboutModalComponentProps) {
-  const [companyName, setCompanyName] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [phone, setPhone] = useState<string>("");
-  const [companyAddress, setCompanyAddress] = useState<string>("");
+export function AboutModalComponent({ openModal, setOpenModal ,about}: AboutModalComponentProps) {
+  const [companyName, setCompanyName] = useState<string | undefined>(about.companyName||undefined);
+  const [email, setEmail] = useState<string| undefined>(about.email||undefined);
+  const [phone, setPhone] = useState<string| undefined>(about.phone||undefined);
+  const [companyAddress, setCompanyAddress] = useState<string| undefined>(about.companyAdress||undefined);
+  const [companyDescription, setCompanyDescription] = useState<string| undefined>(about.companyDescription||undefined);
+  const [companyTagline, setCompanyTagline] = useState<string| undefined>(about.companyTagline||undefined);
   const [loading,setLoading]=useState(false)
   const [file, setFile] = useState<File | null>(null);
   const handleFileChange=(event:any)=>{
@@ -29,6 +41,8 @@ export function AboutModalComponent({ openModal, setOpenModal }: AboutModalCompo
         email: email || undefined,
         phone: phone || undefined,
         companyAdress: companyAddress || undefined,
+        companyDescription: companyDescription || undefined,
+        companyTagline:companyTagline||undefined,
         file:file||undefined
       });
       if(response.status==200){
@@ -52,8 +66,7 @@ export function AboutModalComponent({ openModal, setOpenModal }: AboutModalCompo
             <TextInput
               id="CompanyName"
               type="text"
-              placeholder="Company Name"
-              value={companyName}
+              value={companyName || "N/A"}
               onChange={(e) => setCompanyName(e.target.value)}
             />
           </div>
@@ -63,8 +76,7 @@ export function AboutModalComponent({ openModal, setOpenModal }: AboutModalCompo
             <TextInput
               id="Email"
               type="email"
-              placeholder="New Email"
-              value={email}
+              value={email || "N/A"}
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
@@ -74,8 +86,7 @@ export function AboutModalComponent({ openModal, setOpenModal }: AboutModalCompo
             <TextInput
               id="Phone"
               type="text"
-              placeholder="Update Your Phone"
-              value={phone}
+              value={phone || "N/A"}
               onChange={(e) => setPhone(e.target.value)}
             />
           </div>
@@ -85,14 +96,33 @@ export function AboutModalComponent({ openModal, setOpenModal }: AboutModalCompo
             <TextInput
               id="CompanyAddress"
               type="text"
-              placeholder="Add Company Address..."
-              value={companyAddress}
+              value={companyAddress || "N/A"}
               onChange={(e) => setCompanyAddress(e.target.value)}
             />
           </div>
 
           <div>
-            <Label htmlFor="image" value="Product Image" />
+            <Label htmlFor="CompanyTagline" value="Company Tagline" />
+            <TextInput
+              id="CompanyTagline"
+              type="text"
+              value={companyTagline || "N/A"}
+              onChange={(e) => setCompanyTagline(e.target.value)}
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="CompanyDescription" value="Company Description" />
+            <TextInput
+              id="CompanyDescription"
+              type="text"
+              value={companyDescription || "N/A"}
+              onChange={(e) => setCompanyDescription(e.target.value)}
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="image" value="Company Logo" />
             <FileInput id="image" accept="image/*" required onChange={handleFileChange}/>
           </div>
 

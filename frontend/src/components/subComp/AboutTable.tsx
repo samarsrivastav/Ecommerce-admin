@@ -38,7 +38,9 @@ interface aboutProp{
     email?:string,
     logo?:string,
     companyName?:string,
-    companyAdress?:string
+    companyAdress?:string,
+    companyTagline?:string,
+    companyDescription?:string
 }
 export default function AboutTables({about}:{about:aboutProp}) {
     // console.log(about)
@@ -47,6 +49,8 @@ export default function AboutTables({about}:{about:aboutProp}) {
         createData('Phone', about.phone?about.phone:'N/A'),
         createData('Email', about.email?about.email:'N/A'),
         createData('Company Adress', about.companyAdress?about.companyAdress:'N/A'),
+        createData('Company Tagline', about.companyTagline?about.companyTagline:'N/A'),
+        createData('Company Description', about.companyDescription?about.companyDescription:'N/A'),
     ];
   return (
     <TableContainer className='border shadow-lg shadow-black' >

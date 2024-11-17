@@ -27,6 +27,8 @@ model About{
   logo String?
   companyName String?
   companyAdress String?
+  companyTagline String?
+  companyDescription String?
 }
 model contact{
   id Int @id @default(autoincrement())

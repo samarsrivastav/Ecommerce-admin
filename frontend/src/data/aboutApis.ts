@@ -14,6 +14,8 @@ interface UpdateAboutData {
     email?: string;
     file?: File;
     companyAdress?: string;
+    companyTagline?:string
+    companyDescription?:string
 }
 
 export const updateAbout = async (data: UpdateAboutData) => {
@@ -23,6 +25,8 @@ export const updateAbout = async (data: UpdateAboutData) => {
     if (data.phone) formData.append("phone", data.phone);
     if (data.email) formData.append("email", data.email);
     if (data.companyAdress) formData.append("companyAdress", data.companyAdress);
+    if (data.companyTagline) formData.append("companyTagline", data.companyTagline);
+    if (data.companyDescription) formData.append("companyDescription", data.companyDescription);
     if (data.file) formData.append("file", data.file);
 
     const response = await axios.put('http://localhost:3000/api/about/update', formData, {

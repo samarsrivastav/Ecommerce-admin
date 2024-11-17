@@ -35,7 +35,7 @@ export function About() {
     
   return (
     <div className=" h-screen ml-[20rem] w-full text-center">
-        <AboutModalComponent openModal={openModal} setOpenModal={setOpenModal}/>
+        <AboutModalComponent openModal={openModal} setOpenModal={setOpenModal} about={about}/>
         <div className="flex my-5 justify-around">
             <div className="font-semibold text-5xl text-center font-sans my-5 text-[#133E87]">About</div>
             <img 

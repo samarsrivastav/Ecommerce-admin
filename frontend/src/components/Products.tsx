@@ -4,6 +4,7 @@ import { ProductCard } from "./subComp/ProductCard";
 import { useEffect, useState } from "react";
 import { getProduct } from "../data/products";
 import { Loading } from "./Loading";
+import { ProductNotFound } from "./subComp/ProductNotFound";
 
 interface item {
   id: number;
@@ -55,11 +56,20 @@ export const Products = () => {
         </div>
       </div>
       <ModalComponent openModal={openModal} setOpenModal={setOpenModal} onAdd={handleAddProduct}/>
-      <div className="grid grid-cols-3">
-        {products.map(item => (
-          <ProductCard item={item} key={item.id} onDelete={handleProductDelete} onUpdate={handleUpdateProduct}/>
-        ))}
-      </div>
+      {products.length === 0 ? (
+        <ProductNotFound />
+      ) : (
+        <div className="grid grid-cols-3">
+          {products.map(item => (
+            <ProductCard 
+              item={item} 
+              key={item.id} 
+              onDelete={handleProductDelete} 
+              onUpdate={handleUpdateProduct} 
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };

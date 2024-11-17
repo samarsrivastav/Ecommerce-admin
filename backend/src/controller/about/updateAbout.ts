@@ -24,7 +24,7 @@ const bufferToStream = (buffer: Buffer): Readable => {
 
 const updateAbout = async (req: FileRequest, res: Response): Promise<void> => {
   try {
-    const dataBody: { phone?: string; email?: string; logo?: string ;companyName?:string;companyAdress?:string} = {};
+    const dataBody: { phone?: string; email?: string; logo?: string ;companyName?:string;companyAdress?:string;companyTagline?:string;companyDescription?:string} = {};
 
     if (req.file?.buffer) {
       await new Promise<void>((resolve, reject) => {
@@ -56,6 +56,12 @@ const updateAbout = async (req: FileRequest, res: Response): Promise<void> => {
     }
     if (req.body.companyName) {
       dataBody.companyName = req.body.companyName;
+    }
+    if (req.body.companyTagline) {
+      dataBody.companyTagline = req.body.companyTagline;
+    }
+    if (req.body.companyDescription) {
+      dataBody.companyDescription = req.body.companyDescription;
     }
 
     const result = await prisma.about.update({

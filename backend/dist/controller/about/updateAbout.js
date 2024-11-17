@@ -55,6 +55,12 @@ const updateAbout = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         if (req.body.companyName) {
             dataBody.companyName = req.body.companyName;
         }
+        if (req.body.companyTagline) {
+            dataBody.companyTagline = req.body.companyTagline;
+        }
+        if (req.body.companyDescription) {
+            dataBody.companyDescription = req.body.companyDescription;
+        }
         const result = yield prisma.about.update({
             where: {
                 id: 1,

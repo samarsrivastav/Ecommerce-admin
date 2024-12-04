@@ -17,40 +17,42 @@ interface AboutModalComponentProps {
   about:aboutProp
 }
 
-export function AboutModalComponent({ openModal, setOpenModal ,about}: AboutModalComponentProps) {
-  const [companyName, setCompanyName] = useState<string | undefined>(about.companyName||undefined);
-  const [email, setEmail] = useState<string| undefined>(about.email||undefined);
-  const [phone, setPhone] = useState<string| undefined>(about.phone||undefined);
-  const [companyAddress, setCompanyAddress] = useState<string| undefined>(about.companyAdress||undefined);
-  const [companyDescription, setCompanyDescription] = useState<string| undefined>(about.companyDescription||undefined);
-  const [companyTagline, setCompanyTagline] = useState<string| undefined>(about.companyTagline||undefined);
-  const [loading,setLoading]=useState(false)
+export function AboutModalComponent({ openModal, setOpenModal, about }: AboutModalComponentProps) {
+  const [companyName, setCompanyName] = useState<string | undefined>(about.companyName || undefined);
+  const [email, setEmail] = useState<string | undefined>(about.email || undefined);
+  const [phone, setPhone] = useState<string | undefined>(about.phone || undefined);
+  const [companyAddress, setCompanyAddress] = useState<string | undefined>(about.companyAdress || undefined);
+  const [companyDescription, setCompanyDescription] = useState<string | undefined>(about.companyDescription || undefined);
+  const [companyTagline, setCompanyTagline] = useState<string | undefined>(about.companyTagline || undefined);
+  const [loading, setLoading] = useState(false);
   const [file, setFile] = useState<File | null>(null);
-  const handleFileChange=(event:any)=>{
-    const selectedFile=event.target.files?.[0]
-    if(selectedFile){
-      setFile(selectedFile)
+
+  const handleFileChange = (event: any) => {
+    const selectedFile = event.target.files?.[0];
+    if (selectedFile) {
+      setFile(selectedFile);
     }
-  }
+  };
 
   const handleUpdate = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
-      const response=await  updateAbout({
+      const response = await updateAbout({
         companyName: companyName || undefined,
         email: email || undefined,
         phone: phone || undefined,
         companyAdress: companyAddress || undefined,
         companyDescription: companyDescription || undefined,
-        companyTagline:companyTagline||undefined,
-        file:file||undefined
+        companyTagline: companyTagline || undefined,
+        file: file || undefined,
       });
-      if(response.status==200){
+      if (response.status == 200) {
         setOpenModal(false);
-        setLoading(false)
       }
     } catch (error) {
       console.error("Error updating details:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -66,8 +68,9 @@ export function AboutModalComponent({ openModal, setOpenModal ,about}: AboutModa
             <TextInput
               id="CompanyName"
               type="text"
-              value={companyName || "N/A"}
+              value={companyName || ""}
               onChange={(e) => setCompanyName(e.target.value)}
+              placeholder="N/A"
             />
           </div>
 
@@ -76,8 +79,9 @@ export function AboutModalComponent({ openModal, setOpenModal ,about}: AboutModa
             <TextInput
               id="Email"
               type="email"
-              value={email || "N/A"}
+              value={email || ""}
               onChange={(e) => setEmail(e.target.value)}
+              placeholder="N/A"
             />
           </div>
 
@@ -86,8 +90,9 @@ export function AboutModalComponent({ openModal, setOpenModal ,about}: AboutModa
             <TextInput
               id="Phone"
               type="text"
-              value={phone || "N/A"}
+              value={phone || ""}
               onChange={(e) => setPhone(e.target.value)}
+              placeholder="N/A"
             />
           </div>
 
@@ -96,8 +101,9 @@ export function AboutModalComponent({ openModal, setOpenModal ,about}: AboutModa
             <TextInput
               id="CompanyAddress"
               type="text"
-              value={companyAddress || "N/A"}
+              value={companyAddress || ""}
               onChange={(e) => setCompanyAddress(e.target.value)}
+              placeholder="N/A"
             />
           </div>
 
@@ -106,8 +112,9 @@ export function AboutModalComponent({ openModal, setOpenModal ,about}: AboutModa
             <TextInput
               id="CompanyTagline"
               type="text"
-              value={companyTagline || "N/A"}
+              value={companyTagline || ""}
               onChange={(e) => setCompanyTagline(e.target.value)}
+              placeholder="N/A"
             />
           </div>
 
@@ -116,18 +123,19 @@ export function AboutModalComponent({ openModal, setOpenModal ,about}: AboutModa
             <TextInput
               id="CompanyDescription"
               type="text"
-              value={companyDescription || "N/A"}
+              value={companyDescription || ""}
               onChange={(e) => setCompanyDescription(e.target.value)}
+              placeholder="N/A"
             />
           </div>
 
           <div>
             <Label htmlFor="image" value="Company Logo" />
-            <FileInput id="image" accept="image/*" required onChange={handleFileChange}/>
+            <FileInput id="image" accept="image/*" required onChange={handleFileChange} />
           </div>
 
           <div className="w-full">
-            {loading?<p>Loading...</p>:""}
+            {loading && <p>Loading...</p>}
             <Button className="bg-[#133E87] text-white" onClick={handleUpdate}>
               Update Contact Details
             </Button>
@@ -137,3 +145,4 @@ export function AboutModalComponent({ openModal, setOpenModal ,about}: AboutModa
     </Modal>
   );
 }
+
